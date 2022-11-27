@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+
+    <div class="block">
+        <span class="demonstration">分页</span>
+        <template>
+            <el-table
+                    :data="tableData"
+                    style="width: 100%">
+                <el-table-column
+                        prop="id"
+                        label="ID"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="article"
+                        label="文章"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="user"
+                        label="用户"
+                >
+                </el-table-column>
+            </el-table>
+            <el-pagination
+                    layout="prev, pager, next"
+                    :total="total"
+                    :page-size="pageNum"
+                    @current-change="handleCurrentChange"
+            >
+            </el-pagination>
+        </template>
+    </div>
+
+</div>
+</body>
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                page: 1,
+                pageNum: 10,
+                tableData: [],
+                total: 0
+            }
+        },
+        created() {
+            this.getList()
+        },
+        methods: {
+            getList() {
+                let self = this
+                axios.get('http://localhost/test.php?page=' + self.page + '&pageNum=' + self.pageNum)
+                    .then(function (data) {
+                        console.log(data.data)
+                        self.tableData = data.data.list
+                        self.total = data.data.total
+                    })
+            },
+            handleCurrentChange(page){
+                this.page = page;
+                this.getList()
+            },
+            // GetRequest() {
+            //     let url = window.document.location.href.toString();
+            //     let u = url.split("?");
+            //     if (typeof (u[1]) == "string") {
+            //         u = u[1].split("&");
+            //         let get = {};
+            //         for (let i in u) {
+            //             let j = u[i].split("=");
+            //             get[j[0]] = j[1];
+            //         }
+            //         return get;
+            //     } else {
+            //         return {};
+            //     }
+            // }
+        }
+    })
+</script>
+</html>
+
+
